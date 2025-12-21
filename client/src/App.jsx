@@ -20,7 +20,7 @@ const App = () => {
       <Route path='/' element = {<Home/>} />
       <Route path='/car-Details/:id' element = {<CarDetails />} />
       <Route path='/cars' element = {<Cars/>} />
-      <Route path='/my-bookings' element = {<MyBookings/>} />
+      <Route path='/My-bookings' element = {<MyBookings/>} />
     </Routes>
 
     {!isOwnerPath && <Footer />}
