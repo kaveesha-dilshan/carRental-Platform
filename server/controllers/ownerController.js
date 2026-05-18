@@ -37,7 +37,7 @@ export const addCar = async (req, res)=>{
         // optimize through imagekit URl transformation
         var optimizeImageUrl = imagekit.url({
             path : "/default-image.jpg",
-            trasformation : [
+            transformation : [
                 {width: '1280'}, //width resizing
                 {quality: 'auto'}, //Auto compression
                 { format: 'webp' } // convert to modern format
@@ -122,10 +122,10 @@ export const getDashboardData = async (req, res) => {
         }
 
         const cars = await Car.find({owner: _id})
-        const bookings = (await Booking.find({owner:_id}).populate('car')).toSorted({createdAt: -1});
+        const bookings = await Booking.find({ owner: _id }).populate('car').sort({ createdAt: -1 });
 
         const pendingBookings = await Booking.find({owner:_id, status: "pending"})
-        const completedBookings = await Booking.find({owner:_id, status: "comfirmed"})
+        const completedBookings = await Booking.find({owner:_id, status: "confirmed"})
 
         // Calculate mothlyRevenue from bookings where status is confirmed 
         const mothlyRevenue = bookings.slice().filter(booking => booking.status === 'confirmed').reduce((acc, booking)=> acc + booking.price, 0)
@@ -141,7 +141,7 @@ export const getDashboardData = async (req, res) => {
         res.json({success: true, dashboardData});
     } catch (error) {
         console.log(error.message);
-        req.json({success: false, message: error.message})
+        res.json({success: false, message: error.message})
     }
 }
 
@@ -149,7 +149,6 @@ export const getDashboardData = async (req, res) => {
 export const updateUserImage = async (req, res)=>{
     try {
         const {_id} = req.user;
-        let car = JSON.parse(req.body.carData);
         const imageFile = req.file;
 
         // Upload Image to ImageKit
@@ -163,7 +162,7 @@ export const updateUserImage = async (req, res)=>{
         // optimize through imagekit URl transformation
         var optimizeImageUrl = imagekit.url({
             path : response.filePath,
-            trasformation : [
+            transformation : [
                 {width: '400'}, //width resizing
                 {quality: 'auto'}, //Auto compression
                 { format: 'webp' } // convert to modern format
@@ -173,11 +172,12 @@ export const updateUserImage = async (req, res)=>{
         const image = optimizeImageUrl;
 
         await User.findByIdAndUpdate(_id, {image});
-        res.json({success: true, message: "Image Updated"})
+        res.json({success: true, message: "Image Updated",image})
 
 
     } catch (error) {
         console.log(error.message);
-        req.json({success: false, message: error.message})
+        res.status(500).json({ success: false, message: error.message });
     }
+    // console.log(data)
 }

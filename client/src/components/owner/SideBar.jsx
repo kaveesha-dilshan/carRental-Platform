@@ -12,6 +12,11 @@ const SideBar = () => {
 
     const updateImage = async ()=> {
         try {
+
+            if(!image){
+                return toast.error("Please select an image")
+            }
+            
             const formData = new FormData()
             formData.append('image', image)
 
@@ -34,7 +39,7 @@ const SideBar = () => {
 
         <div className='group relative'>
             <label htmlFor="image">
-                <img src={image ? URL.createObjectURL(image) : user?.image || "https://scontent.fcmb1-2.fna.fbcdn.net/v/t39.30808-1/523841211_732648996070715_166223191672472567_n.jpg?stp=cp0_dst-jpg_s40x40_tt6&_nc_cat=100&ccb=1-7&_nc_sid=1d2534&_nc_ohc=tv3tBCp-F_MQ7kNvwFvZhAl&_nc_oc=AdlYeA9nEYo1-f6Y1i_7diMjxiq0Kqwlxhz93TRjkMpuUNO8lXVAIXU-6g6aJSlX5WI&_nc_zt=24&_nc_ht=scontent.fcmb1-2.fna&_nc_gid=TymJUV71X0iE1GJ-jREJCw&oh=00_Afkk3VAAuQPs7R8OjN93P1i2T0sdNUS-9FEe7z8i5rLTZg&oe=694FEF9E"} alt="" 
+                <img src={image ? URL.createObjectURL(image) : user?.image || "https://ui-avatars.com/api/?name=User"} alt="" 
                 className='h-9 md:h-14 w-9 md:w-14 rounded-full mx-auto'/>
                 <input type="file" id = 'image' accept="image/*" hidden onChange={e=> setImage(e.target.files[0])} />
 
